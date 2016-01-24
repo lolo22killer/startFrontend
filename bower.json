@@ -1,0 +1,27 @@
+{
+  "name": "bower",
+  "description": "Description",
+  "main": "gulpfile.js",
+  "authors": [
+    "Danil Kolpakov"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "latest",
+    "normalize-css": "latest",
+    "masonry": "latest",
+    "jquery-validation": "latest",
+    "bootstrap": "latest"
+  },
+  "overrides": {},
+  "devDependencies": {}
+}

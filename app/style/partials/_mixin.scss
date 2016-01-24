@@ -1,0 +1,12 @@
+/* Convert px to rem */
+@function rem($px, $base: $font-size-base) {
+    @return ($px / $base) * 1rem;
+}
+
+@mixin clearfix() {
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
