@@ -1,0 +1,48 @@
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+$fonts_dir:                  "../fonts/";
+$font-family-base:           	Roboto, Arial, sans-serif;
+
+// Pixel value used to responsively scale all typography. Applied to the `<html>` element.
+$font-size-root:             18px;
+$font-size-base:             18px;
+
+
+$font-size-h1:               3rem;
+$font-size-h2:               1.875rem;
+$font-size-h3:               1.250rem;
+$font-size-h4:               1.5rem;
+$font-size-h5:               1.25rem;
+$font-size-h6:               1rem;
+
+$line-height:                30px;
+
+//Цветовое оформление
+$color-st-1:               #1ab5b3; // синий
+$color-st-2:               #f8cd53; //желтый
+$color-st-3:               #1D98C7; //синий
+
+
+$brand-primary:             #0275d8;
+$brand-success:             #5cb85c;
+$brand-info:                #5bc0de;
+$brand-warning:             #f0ad4e;
+$brand-danger:              #d9534f;
+
+
+
+//Цвет для текста
+$gray:                      #a3a3a3; //Основной цвет теста
+$gray-dark:                 #0d0d0d; //Темнее основного
+$gray-light:                #818a91; //Светлее основного
+
+//Body
+
+$body-bg:                    #fff;
+$body-color:                 $gray;
+
+//Links
+
+$link-color:                 $brand-primary;
+$link-hover-color:           darken($link-color, 15%);

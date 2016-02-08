@@ -1,0 +1,68 @@
+/*----------  Базовые стили  ----------*/
+
+*, :after, :before {
+	box-sizing: border-box;
+}
+html {
+	height: 100%;
+}
+body{
+	font-family: $font-family-base;
+	font-size: $font-size-base;
+	font-weight: 300;
+	line-height: $line-height;
+	background-color: $body-bg;
+	color: $body-color;
+}
+h1,h2,h3{
+	margin: 0;
+}
+h2,h3{
+	color: $gray-dark;
+}
+h1{
+	font-size: $font-size-h1;
+}
+h2{
+	font-size: $font-size-h2;
+}
+h3{
+	font-size: $font-size-h3;
+}
+p{
+	margin: 0;
+}
+a{
+	color: $gray;
+	text-decoration: none;
+}
+img, iframe{
+	display: block;
+	width: 100%;
+	height: auto;
+}
+.clearfix:before,
+.clearfix:after{
+  content: " ";
+  display: table;
+}
+.list-unstyled{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+
+
+//==============================================================================
+
+
+/*----------  Основная разметка  ----------*/
+
+#wrapper{
+	overflow-x: hidden;
+	max-width: 1920px;
+	width: 100%;
+	margin: auto;
+	position: relative;
+}

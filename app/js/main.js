@@ -1,7 +1,5 @@
-window.onload = function() {
-//=
-};
+//= vendor/script.js
 
-$(function () {
-	//=
+;$(function () {
+
 });

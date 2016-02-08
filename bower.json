@@ -18,9 +18,15 @@
   "dependencies": {
     "jquery": "latest",
     "normalize-css": "latest",
-    "masonry": "latest",
     "jquery-validation": "latest",
-    "bootstrap": "latest"
+    "isotope": "latest",
+    "imagesloaded": "latest",
+    "swiper": "latest",
+    "owl.carousel": "owl-carousel2#^2.0.0-beta.3",
+    "fancybox": "latest",
+    "photoswipe": "latest",
+    "tooltipster": "latest",
+    "noty": "latest"
   },
   "overrides": {},
   "devDependencies": {}
