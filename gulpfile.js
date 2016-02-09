@@ -6,31 +6,30 @@
 /////////////////////////////////////////////////
 var path = {
 	public: { //Готовая сборка
-		dir: 'public/',
+		root: 'public/',
 		js: 'public/js/',
 		style: 'public/style/',
-		img: 'public/img/',
-		fonts: 'public/fonts/'
+		img: 'public/'
 	},
 	app:{ //Рабочие файлы
-		dir: 'app/',
+		dir: 'app/dir/**/',
 		html: 'app/*.html',
 		js: 'app/js/main.js',
-		scss: 'app/scss/main.scss',
-		img: 'app/img/**/*.*',
-		fonts: 'app/fonts/**/*.*',
-		ico: ['app/favicon.ico', 'app/*.png']
+		style: 'app/style/main.scss',
+		img: ['app/**/*.{png,jpg,jpeg,gif,svg}', '!app/dir/**/*.*']
 	},
 	watch:{//Файлы слежения
-		dir: 'app/',
+		dir: 'app/dir/**/*',
+
+		///
 		html: ['app/**/*.html', '!app/template/**/*.html'],
 		template: 'app/template/**/*.html',
-		html: 'app/**/*.html',
+		///
+
+		// html: 'app/**/*.html',
 		js: 'app/js/**/*.js',
-		scss: 'app/scss/**/*.scss',
-		img: 'app/img/**/*.*',
-		fonts: 'app/fonts/**/*.*',
-		ico: ['app/favicon.ico', 'app/*.png']
+		style: 'app/style/**/*.scss',
+		img: ['app/**/*.{png,jpg,jpeg,gif,svg}', '!app/dir/**/*.*']
 	},
 	server:{//Сервер
 		proxyUrl: 'http://lending.ru',
@@ -46,7 +45,7 @@ var path = {
 var gulp = require('gulp'),
 		sass = require('gulp-sass'),
 		browserSync = require('browser-sync').create(),
-		minifyCss = require('gulp-minify-css'), // Сжатие css файлов
+		cssnano = require('gulp-cssnano'), // Сжатие css файлов
 		uglify = require('gulp-uglify'), // Сжатие js файлов
 		htmlmin = require('gulp-htmlmin'), // Сжатие Html
 		rename = require('gulp-rename'), // Переменование
@@ -67,7 +66,7 @@ var gulp = require('gulp'),
 //
 /////////////////////////////////////////////////
 gulp.task('style', function () {
-	return gulp.src(path.app.scss)
+	return gulp.src(path.app.style)
 		.pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
 		.pipe(sass())
 		.pipe(rename({suffix: '.min'}))
@@ -96,19 +95,22 @@ gulp.task('js', function() {
 /////////////////////////////////////////////////
 gulp.task('html', function() {
 	return gulp.src(path.app.html)
-	.pipe(changed(path.public.dir))
 	.pipe(rigger())
+	.pipe(changed(path.public.root))
 	.pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-	.pipe(gulp.dest(path.public.dir))
+	.pipe(gulp.dest(path.public.root))
 	.pipe(browserSync.stream());
 });
+
+////
 gulp.task('template', function() {
 	return gulp.src(path.app.html)
 	.pipe(rigger())
 	.pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-	.pipe(gulp.dest(path.public.dir))
-	.pipe(browserSync.stream());
+	.pipe(gulp.dest(path.public.root));
 });
+////
+
 //////////////////////////////////////////////////
 //
 // Задачи для Img
@@ -131,18 +133,11 @@ gulp.task('img', function() {
 // Задачи для переноса остальных файлов
 //
 /////////////////////////////////////////////////
-gulp.task('copy', [ 'fonts', 'ico' ]);
-
-gulp.task('fonts', function() {
-	return gulp.src(path.app.fonts)
+gulp.task('copy-dir', function() {
+	return gulp.src(path.app.dir)
+		.pipe(changed(path.public.root))
 		.pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-		.pipe(gulp.dest(path.public.fonts))
-		.pipe(browserSync.stream());
-});
-gulp.task('ico', function() {
-	return gulp.src(path.app.ico)
-		.pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-		.pipe(gulp.dest(path.public.dir))
+		.pipe(gulp.dest(path.public.root))
 		.pipe(browserSync.stream());
 });
 
@@ -157,13 +152,15 @@ gulp.task ('watch', function() {
 
 
 		gulp.watch(path.watch.html, ['html']);
-		gulp.watch(path.watch.template, ['template']);
 
-		gulp.watch(path.watch.scss, ['style']);
+///
+		gulp.watch(path.watch.template, ['template']);
+///
+
+		gulp.watch(path.watch.style, ['style']);
 		gulp.watch(path.watch.js, ['js']);
 		gulp.watch(path.watch.img, ['img']);
-		gulp.watch(path.watch.ico, ['ico']);
-		gulp.watch(path.watch.fonts, ['fonts']);
+		gulp.watch(path.watch.dir, ['copy-dir']);
 });
 
 
@@ -188,7 +185,11 @@ gulp.task('server', function() {
 // Задача по умолчанию
 //
 /////////////////////////////////////////////////
-gulp.task('default', ['html', 'style', 'js', 'img', 'copy', 'watch', 'server']);
+gulp.task('default',function(callback) {
+  runSequence(['html', 'style', 'js', 'img', 'copy-dir'],
+              'watch', 'server',
+              callback);
+});
 
 
 
@@ -200,22 +201,22 @@ gulp.task('default', ['html', 'style', 'js', 'img', 'copy', 'watch', 'server']);
 /////////////////////////////////////////////////
 gulp.task('build', function(callback) {
   runSequence('build-clean',
-              ['build-html', 'build-style', 'build-js', 'img', 'copy'],
+              ['build-html', 'build-style', 'build-js', 'img', 'copy-dir'],
               'watch', 'server',
               callback);
 });
 
 gulp.task('build-clean', function() {
-	return gulp.src(path.public.dir)
+	return gulp.src(path.public.root)
 		.pipe(clean({force: true}));
 });
 
 gulp.task('build-style', function () {
-	return gulp.src(path.app.scss)
+	return gulp.src(path.app.style)
 		.pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
 		.pipe(sass())
 		.pipe(autoprefixer({ browsers: ['last 3 versions'], cascade: false } ))
-		.pipe(minifyCss())
+		.pipe(cssnano())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest(path.public.style))
 		.pipe(browserSync.stream());
@@ -236,7 +237,7 @@ gulp.task('build-html', function() {
 	.pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
 	.pipe(rigger())
 	.pipe(htmlmin({collapseWhitespace: true}))
-	.pipe(gulp.dest(path.public.dir))
+	.pipe(gulp.dest(path.public.root))
 	.pipe(browserSync.stream());
 });
 
