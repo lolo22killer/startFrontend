@@ -16,7 +16,8 @@ var path = {
 		html: 'app/*.html',
 		js: 'app/js/main.js',
 		style: 'app/style/main.scss',
-		img: ['app/**/*.{png,jpg,jpeg,gif,svg}', '!app/dir/**/*.*']
+		img: ['app/**/*.{png,jpg,jpeg,gif,svg}', '!app/dir/**/*.*', '!app/img/sprite/**/*.*'],
+		sprite: 'app/img/sprite/**/*.png'
 	},
 	watch:{//Файлы слежения
 		dir: 'app/dir/**/*',
@@ -29,7 +30,8 @@ var path = {
 		// html: 'app/**/*.html',
 		js: 'app/js/**/*.js',
 		style: 'app/style/**/*.scss',
-		img: ['app/**/*.{png,jpg,jpeg,gif,svg}', '!app/dir/**/*.*']
+		img: ['app/**/*.{png,jpg,jpeg,gif,svg}', '!app/dir/**/*.*', '!app/img/sprite/**/*.*'],
+		sprite: 'app/img/sprite/**/*.png'
 	},
 	server:{//Сервер
 		proxyUrl: 'http://lending.ru',
@@ -57,6 +59,7 @@ var gulp = require('gulp'),
 		clean = require('gulp-clean'),
 		changed = require('gulp-changed'), // Кеширование файлов, tack работают только для изменившихся фалов
 		runSequence = require('run-sequence'), // Асинхронный запуск задач
+		spritesmith = require('gulp.spritesmith'), // Сбоока спрайтов
 		rigger = require('gulp-rigger'); //Импорт файлов //= template/файл.html
 
 
@@ -144,6 +147,24 @@ gulp.task('copy-dir', function() {
 
 //////////////////////////////////////////////////
 //
+// Генерация спрайтов в sprite.png and _sprite.scss
+//
+/////////////////////////////////////////////////
+gulp.task('sprite', function () {
+  var spriteData = gulp.src(path.app.sprite)
+  	.pipe(spritesmith({
+	    imgName: 'sprite.png',
+	    cssName: '_sprite.scss',
+	    cssFormat: 'css',
+	    algorithm: 'binary-tree'
+	  }));
+  spriteData.img.pipe(gulp.dest('./app/img/'));
+  spriteData.css.pipe(gulp.dest('app/style/partials/'));
+});
+
+
+//////////////////////////////////////////////////
+//
 // Задача watch
 // Отслеживает любые изменения в файлах CSS, JS и HTML
 //
@@ -160,6 +181,7 @@ gulp.task ('watch', function() {
 		gulp.watch(path.watch.style, ['style']);
 		gulp.watch(path.watch.js, ['js']);
 		gulp.watch(path.watch.img, ['img']);
+		gulp.watch(path.watch.sprite, ['sprite']);
 		gulp.watch(path.watch.dir, ['copy-dir']);
 });
 
